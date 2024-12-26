@@ -3,12 +3,10 @@ import { useState } from "react";
 import { useCallback } from "react";
 import { useEffect } from "react";
 import Draggable from "react-draggable";
-import { useSave } from "../../hook/useSave";
 import { createElement } from "react";
 
-export default function DraggableComponent({ tagName, className, name }) {
+export default function DraggableComponent({ tagName, props, name }) {
     const draggableRef = useRef(null);
-    const saveControl = useSave()
     const [position, setPosition] = useState({
         "translate-x": 0,
         "translate-y": 0,
@@ -38,21 +36,20 @@ export default function DraggableComponent({ tagName, className, name }) {
         }
         return null;
     };
+    console.log(props);
 
     useEffect(() => {
         setupPosition();
-        saveControl()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [setupPosition]);
 
     return (
         <Draggable
-            // bounds="parent"
+            bounds="parent"
             onDrag={onDrag}
             ref={draggableRef}
             position={getLastPosition()}
         >
-            {createElement(tagName, { className: className || '' }, name)}
+            {createElement(tagName, { ...props }, name)}
         </Draggable>
     );
 }
